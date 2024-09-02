@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Task Manager</h1>
+    </header>
+    <main>
+      <section id="task-form">
+        <h2>Add New Task</h2>
+        <form id="add-task-form">
+          <input
+            type="text"
+            id="task-title"
+            placeholder="Task Title"
+            required
+          />
+          <textarea
+            id="task-description"
+            placeholder="Task Description"
+          ></textarea>
+          <input type="date" id="task-due-date" />
+          <select id="task-priority">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+          <input type="text" id="task-category" placeholder="Category" />
+          <button type="submit">Add Task</button>
+        </form>
+      </section>
+      <section id="edit-task-section" style="display: none">
+        <h2>Edit Task</h2>
+        <form id="edit-task-form">
+          <input type="hidden" id="edit-task-id" />
+          <input type="text" id="edit-task-title" required />
+          <textarea id="edit-task-description"></textarea>
+          <input type="date" id="edit-task-due-date" />
+          <select id="edit-task-priority">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+          <input type="text" id="edit-task-category" />
+          <button type="submit">Update Task</button>
+          <button type="button" id="cancel-edit">Cancel</button>
+        </form>
+      </section>
+      <section id="task-list">
+        <h2>Tasks</h2>
+        <div id="task-filters">
+          <button id="filter-all">All</button>
+          <button id="filter-active">Active</button>
+          <button id="filter-completed">Completed</button>
+        </div>
+        <div id="task-sort">
+          <select id="sort-by">
+            <option value="date">Sort by Date</option>
+            <option value="priority">Sort by Priority</option>
+          </select>
+        </div>
+        <ul id="tasks"></ul>
+      </section>
+      <section id="task-summary">
+        <h2>Summary</h2>
+        <p>Total Tasks: <span id="total-tasks">0</span></p>
+        <p>Active Tasks: <span id="active-tasks">0</span></p>
+        <p>Completed Tasks: <span id="completed-tasks">0</span></p>
+      </section>
+    </main>
+    <script src="js/utils.js"></script>
+    <script src="js/taskManager.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
