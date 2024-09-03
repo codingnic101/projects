@@ -1,5 +1,7 @@
 # Task Manager Application
 
+![screenshot](image/README/shot.png)
+
 ## User Stories
 
 ```md
