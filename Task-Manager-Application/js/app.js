@@ -25,35 +25,38 @@ addTaskForm.addEventListener("submit", (e) => {
     priority,
     category
   );
-  renderTask(task);
+  renderTasks();
   addTaskForm.reset();
   updateSummary();
 });
 
 // Render a single task
 function renderTask(task) {
-  const li = document.createElement("li");
-  li.innerHTML = `
-        <h3>${task.title}</h3>
-        <p>${task.description}</p>
-        <p>Due: ${formatDate(task.dueDate)}</p>
-        <p>Priority: ${task.priority}</p>
-        <p>Category: ${task.category}</p>
-        <button class="toggle-status">${
-          task.completed ? "Mark Incomplete" : "Mark Complete"
-        }</button>
-        <button class="edit-task">Edit</button>
-        <button class="delete-task">Delete</button>
-    `;
+  const li = document.createElement('li');
+  li.className = 'task-item';
+  li.draggable = true;
   li.dataset.id = task.id;
-  if (task.completed) li.classList.add("completed");
-  taskList.appendChild(li);
+  li.innerHTML = `
+      <h3>${task.title}</h3>
+      <p>${task.description}</p>
+      <p>Due: ${formatDate(task.dueDate)}</p>
+      <p>Priority: ${task.priority}</p>
+      <p>Category: ${task.category}</p>
+      <button class="toggle-status">${task.completed ? 'Mark Incomplete' : 'Mark Complete'}</button>
+      <button class="edit-task">Edit</button>
+      <button class="delete-task">Delete</button>
+  `;
+  if (task.completed) li.classList.add('completed');
+  return li;
 }
 
 // Render all tasks
 function renderTasks() {
-  taskList.innerHTML = "";
-  taskManager.tasks.forEach(renderTask);
+  taskList.innerHTML = '';
+  taskManager.tasks.forEach(task => {
+      taskList.appendChild(renderTask(task));
+  });
+  addDragAndDropListeners();
 }
 
 // Event delegation for task actions
@@ -75,6 +78,18 @@ taskList.addEventListener("click", (e) => {
     }
   }
 });
+
+// Add drag and drop event listeners
+function addDragAndDropListeners() {
+  const taskItems = document.querySelectorAll('.task-item');
+  taskItems.forEach(item => {
+      item.addEventListener('dragstart', dragStart);
+      item.addEventListener('dragover', dragOver);
+      item.addEventListener('drop', drop);
+      item.addEventListener('dragenter', dragEnter);
+      item.addEventListener('dragleave', dragLeave);
+  });
+}
 
 // Filter tasks
 filterButtons.forEach((button) => {
@@ -145,6 +160,48 @@ editTaskForm.addEventListener('submit', (e) => {
 
 // Cancel edit button
 cancelEditButton.addEventListener('click', hideEditForm);
+
+// Drag and drop event handlers
+function dragStart(e) {
+  e.dataTransfer.setData('text/plain', e.target.dataset.id);
+  setTimeout(() => e.target.classList.add('dragging'), 0);
+}
+
+function dragOver(e) {
+  e.preventDefault();
+}
+
+function drop(e) {
+  e.preventDefault();
+  const draggedTaskId = e.dataTransfer.getData('text/plain');
+  const draggedTask = document.querySelector(`[data-id="${draggedTaskId}"]`);
+  const dropTarget = e.target.closest('.task-item');
+
+  if (draggedTask && dropTarget && draggedTask !== dropTarget) {
+      const taskItems = Array.from(taskList.children);
+      const oldIndex = taskItems.indexOf(draggedTask);
+      const newIndex = taskItems.indexOf(dropTarget);
+
+      if (oldIndex < newIndex) {
+          taskList.insertBefore(draggedTask, dropTarget.nextSibling);
+      } else {
+          taskList.insertBefore(draggedTask, dropTarget);
+      }
+
+      taskManager.reorderTasks(oldIndex, newIndex);
+  }
+
+  draggedTask.classList.remove('dragging');
+  dropTarget.classList.remove('drag-over');
+}
+
+function dragEnter(e) {
+  e.target.closest('.task-item').classList.add('drag-over');
+}
+
+function dragLeave(e) {
+  e.target.closest('.task-item').classList.remove('drag-over');
+}
 
 
 // Initial render

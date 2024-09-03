@@ -235,6 +235,26 @@ button[type="submit"]:hover {
   background-color: #7f8c8d;
 }
 
+/* Drag and Drop Styles */
+.task-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.task-item {
+  cursor: move;
+  transition: background-color 0.3s ease;
+}
+
+.task-item.dragging {
+  opacity: 0.5;
+  background-color: #f1f8ff;
+}
+
+.task-item.drag-over {
+  border-top: 2px solid #3498db;
+}
+
 /* Simpple Responsive Design */
 @media (max-width: 768px) {
   main {

@@ -75,4 +75,10 @@ class TaskManager {
     const active = total - completed;
     return { total, active, completed };
   }
+
+  reorderTasks(oldIndex, newIndex) {
+    const [movedTask] = this.tasks.splice(oldIndex, 1);
+    this.tasks.splice(newIndex, 0, movedTask);
+    this.saveTasks();
+  }
 }
